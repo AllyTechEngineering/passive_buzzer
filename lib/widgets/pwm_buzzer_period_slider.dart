@@ -22,9 +22,9 @@ class PwmBuzzerPeriodSlider extends StatelessWidget {
             children: [
               Text(
                 'Note: $noteNames',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: noteNames == "Off" ? Colors.red : Colors.black, // Make "Off" red
                   fontWeight: FontWeight.bold,
                 ),
               ),
