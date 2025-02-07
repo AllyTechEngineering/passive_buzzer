@@ -77,7 +77,7 @@ class PwmBuzzerPeriodService {
   B5 987.77           1015128
   C6 1046.50          956022
   */
-  void updatePwmPeriod(int updatePeriod) {
+  void updatePwmPeriod(int updatePeriod) async {
     int c4 = 3822192;
     int d4 = 3405299;
     int e4 = 3033704;
@@ -96,48 +96,59 @@ class PwmBuzzerPeriodService {
 
     if (systemOnOffState) {
       if (updatePeriod == 0) {
-        pwm0.setPeriodNs(0);
         pwm0.setDutyCycleNs(0);
+        // await Future.delayed(Duration(milliseconds: 500));
+        // pwm0.setPeriodNs(0);
       }
       if (updatePeriod == 10) {
-        pwm0.setPeriodNs(c4);
         pwm0.setDutyCycleNs((c4 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(c4);
       }
       if (updatePeriod == 20) {
-        pwm0.setPeriodNs(d4);
         pwm0.setDutyCycleNs((d4 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(d4);
       }
       if (updatePeriod == 30) {
-        pwm0.setPeriodNs(e4);
         pwm0.setDutyCycleNs((e4 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(e4);
       }
       if (updatePeriod == 40) {
-        pwm0.setPeriodNs(f4);
         pwm0.setDutyCycleNs((f4 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(f4);
       }
       if (updatePeriod == 50) {
-        pwm0.setPeriodNs(g4);
         pwm0.setDutyCycleNs((g4 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(g4);
       }
       if (updatePeriod == 60) {
-        pwm0.setPeriodNs(a4);
         pwm0.setDutyCycleNs((a4 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(a4);
       }
       if (updatePeriod == 70) {
-        pwm0.setPeriodNs(b4);
         pwm0.setDutyCycleNs((b4 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(b4);
       }
       if (updatePeriod == 80) {
+        pwm0.setDutyCycleNs((c5 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
         pwm0.setPeriodNs(c5);
-        pwm0.setDutyCycleNs((c5/ 2).toInt());
       }
       if (updatePeriod == 90) {
-        pwm0.setPeriodNs(d5);
         pwm0.setDutyCycleNs((d5 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(d5);
       }
       if (updatePeriod == 100) {
-        pwm0.setPeriodNs(e5);
         pwm0.setDutyCycleNs((e5 / 2).toInt());
+        // await Future.delayed(Duration(milliseconds: 500));
+        pwm0.setPeriodNs(e5);
       }
       debugPrint(
         'In PwmBuzzerPeriodService updatePwmPeriod period= ${pwm0.getPeriodNs()}',
