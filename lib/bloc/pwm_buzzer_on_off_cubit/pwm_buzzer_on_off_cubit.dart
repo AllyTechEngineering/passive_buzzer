@@ -10,8 +10,8 @@ class PwmBuzzerOnOffCubit extends Cubit<PwmBuzzerOnOffState> {
   PwmBuzzerOnOffCubit(this.pwmBuzzerPeriodService)
     : super(const PwmBuzzerOnOffState());
 
-  void toggleMotorPower() {
-    pwmBuzzerPeriodService.pwmBuzzerPeriodServiceSystemOnOff();
+  void toggleMusicalSongState() {
+    pwmBuzzerPeriodService.updateMusicalSongState();
     emit(state.copyWith(isOn: !state.isOn));
   }
 }

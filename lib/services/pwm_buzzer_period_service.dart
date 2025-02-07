@@ -4,11 +4,15 @@ import 'package:passive_buzzer/models/musical_notes.dart';
 
 class PwmBuzzerPeriodService {
   static PWM pwm0 = PWM(2, 0); //Model 5, Model 4B uses PWM(0,0) or PWM(0,1)
-  // static PWM pwm1 = PWM(2, 1);
+  static PWM pwm1 = PWM(2, 1);
+  static int songDutyCycle = 0;
+  static int index = 1;
   // static PWM pwm2 = PWM(2, 2);
   // static PWM pwm3 = PWM(2, 3);
 
   static bool systemOnOffState = true;
+  static bool musicalSongState = true;
+
   int setPwmPeriod = 10000000; //10000000ns = 100Hz freq, 1000000ns = 1000 Hz
 
   void initializePwmBuzzerPeriodService() {
@@ -20,7 +24,7 @@ class PwmBuzzerPeriodService {
     }
     try {
       pwm0.setPeriodNs(10000000);
-      // pwm1.setPeriodNs(10000000);
+      pwm1.setPeriodNs(10000000);
       // pwm2.setPeriodNs(10000000);
       // pwm3.setPeriodNs(10000000);
       debugPrint('PwmBuzzerPeriodService period Info: ${pwm0.getPeriodNs()}');
@@ -29,7 +33,7 @@ class PwmBuzzerPeriodService {
     }
     try {
       pwm0.setDutyCycleNs(0);
-      // pwm1.setDutyCycleNs(0);
+      pwm1.setDutyCycleNs(0);
       // pwm2.setDutyCycleNs(0);
       // pwm3.setDutyCycleNs(0);
       debugPrint(
@@ -40,7 +44,7 @@ class PwmBuzzerPeriodService {
     }
     try {
       pwm0.enable();
-      // pwm1.enable();
+      pwm1.enable();
       // pwm2.enable();
       // pwm3.enable();
       debugPrint('PwmBuzzerPeriodService Enable Info: ${pwm0.getEnabled()}');
@@ -61,7 +65,7 @@ class PwmBuzzerPeriodService {
 
   /*
   Musical Notes and Frequencies
-  Note Frequency (Hz) Period (nano seconds)
+  Note Frequency (Hz) Period (nano milliseconds)
   C4 261.63           3822192
   D4 293.66           3405299
   E4 329.63           3033704 
@@ -79,7 +83,6 @@ class PwmBuzzerPeriodService {
   C6 1046.50          956022
   */
   void updatePwmPeriod(int updatePeriod) async {
-
     if (systemOnOffState) {
       // Get the period from the lookup table, default to the last known period if not found
       int period = MusicalNotes.notePeriods[updatePeriod] ?? pwm0.getPeriodNs();
@@ -89,7 +92,7 @@ class PwmBuzzerPeriodService {
         pwm0.setDutyCycleNs(0);
       } else {
         int dutyCycle = (period / 2).toInt(); // Default to 50% duty cycle
-        
+
         // Ensure duty cycle is always less than period
         // if (dutyCycle >= period) {
         //   dutyCycle = (period * 0.4).toInt(); // Reduce to 40% if needed
@@ -116,6 +119,39 @@ class PwmBuzzerPeriodService {
         'In PwmBuzzerPeriodService updatePwmDutyCycle PWM Info: ${pwm0.getPWMinfo()}',
       );
     }
+  }
+
+  void updateMusicalSongState() async {
+    musicalSongState = !musicalSongState;
+
+    // Define two songs: Each is a sequence of three notes
+    List<int> song1 = [10, 20, 30, 40, 50, 60, 70, 80]; // (C4, F4, G4)
+    List<int> song2 = [80, 70, 60, 50, 40, 30, 20, 10]; // (G4, F4, C4)
+
+    // Pick which song to play based on toggle state
+    List<int> selectedSong = musicalSongState ? song1 : song2;
+
+    debugPrint("Playing ${musicalSongState ? 'Song 1' : 'Song 2'}");
+
+    for (int note in selectedSong) {
+      int period = MusicalNotes.notePeriods[note] ?? pwm0.getPeriodNs();
+      int dutyCycle = (period / 2).toInt();
+
+      // Set PWM for the current note
+      pwm0.setPeriodNs(period);
+      pwm0.setDutyCycleNs(dutyCycle);
+
+      debugPrint(
+        "Playing Note: ${MusicalNotes.noteNames[note]} (Period: $period ns)",
+      );
+
+      // Wait for 1 second before playing the next note
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+
+    // Turn off the buzzer after song is complete
+    pwm0.setDutyCycleNs(0);
+    debugPrint("Song finished, buzzer off.");
   }
 
   void pwmBuzzerPeriodServiceSystemOnOff() {

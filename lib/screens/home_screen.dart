@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passive_buzzer/bloc/pwm_buzzer_period_cubit/pwm_buzzer_period_cubit.dart';
 import 'package:passive_buzzer/services/pwm_buzzer_period_service.dart';
 import 'package:passive_buzzer/widgets/pwm_buzzer_period_slider.dart';
+import 'package:passive_buzzer/widgets/pwm_buzzer_toggle_switch.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       create: (context) => PwmBuzzerPeriodCubit(PwmBuzzerPeriodService()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('PWM Motor Control'),
+          title: const Text('Passive Buzzer PWM Demo'),
           centerTitle: true,
         ),
         body: Center(
@@ -28,6 +29,12 @@ class HomeScreen extends StatelessWidget {
                   width: 100.0, // Keep slider narrow
                   height: 300.0, // Match the combined switch height
                   child: const PwmBuzzerPeriodSlider(vertical: true),
+                ),
+                const SizedBox(width: 20.0), // Add space between elements
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [PwmBuzzerToggleSwitch()],
                 ),
               ],
             ),

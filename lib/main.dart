@@ -7,20 +7,23 @@ import 'package:passive_buzzer/services/pwm_buzzer_period_service.dart';
 
 void main() {
   final pwmBuzzerPeriodService = PwmBuzzerPeriodService();
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider<PwmBuzzerPeriodCubit>(
-      create: (context) => PwmBuzzerPeriodCubit(pwmBuzzerPeriodService),
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<PwmBuzzerPeriodCubit>(
+          create: (context) => PwmBuzzerPeriodCubit(pwmBuzzerPeriodService),
+        ),
+        BlocProvider<PwmBuzzerOnOffCubit>(
+          create: (context) => PwmBuzzerOnOffCubit(pwmBuzzerPeriodService),
+        ),
+      ],
+      child: MyApp(),
     ),
-    BlocProvider<PwmBuzzerOnOffCubit>(
-      create: (context) => PwmBuzzerOnOffCubit(pwmBuzzerPeriodService),
-    ),
-  ], child:  MyApp(),
-  ));
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
