@@ -125,8 +125,8 @@ class PwmBuzzerPeriodService {
     musicalSongState = !musicalSongState;
 
     // Define two songs: Each is a sequence of three notes
-    List<int> song1 = [10, 20, 30, 40, 50, 60, 70, 80]; // (C4, F4, G4)
-    List<int> song2 = [80, 70, 60, 50, 40, 30, 20, 10]; // (G4, F4, C4)
+    List<int> song1 = [10, 30, 50, 10, 30, 50]; // (C4, E4, G4)
+    List<int> song2 = [50, 30, 10, 50, 30, 10]; // (G4, E4, C4)
 
     // Pick which song to play based on toggle state
     List<int> selectedSong = musicalSongState ? song1 : song2;
