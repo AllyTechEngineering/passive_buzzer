@@ -1,5 +1,6 @@
 import 'package:dart_periphery/dart_periphery.dart';
 import 'package:flutter/foundation.dart';
+import 'package:passive_buzzer/models/musical_notes.dart';
 
 class PwmBuzzerPeriodService {
   static PWM pwm0 = PWM(2, 0); //Model 5, Model 4B uses PWM(0,0) or PWM(0,1)
@@ -78,84 +79,28 @@ class PwmBuzzerPeriodService {
   C6 1046.50          956022
   */
   void updatePwmPeriod(int updatePeriod) async {
-    int c4 = 3822192;
-    int d4 = 3405299;
-    int e4 = 3033704;
-    int f4 = 2863442;
-    int g4 = 2551020;
-    int a4 = 2272727;
-    int b4 = 2024783;
-    int c5 = 1911102;
-    int d5 = 1702610;
-    int e5 = 1515151;
-    // int f5 = 1435409;
-    // int g5 = 1273885;
-    // int a5 = 1136363;
-    // int b5 = 1015128;
-    // int c6 = 956022;
 
     if (systemOnOffState) {
+      // Get the period from the lookup table, default to the last known period if not found
+      int period = MusicalNotes.notePeriods[updatePeriod] ?? pwm0.getPeriodNs();
+
       if (updatePeriod == 0) {
+        // Stop sound: Set duty cycle to 0, but do NOT change period
         pwm0.setDutyCycleNs(0);
-        // await Future.delayed(Duration(milliseconds: 500));
-        // pwm0.setPeriodNs(0);
+      } else {
+        int dutyCycle = (period / 2).toInt(); // Default to 50% duty cycle
+        
+        // Ensure duty cycle is always less than period
+        // if (dutyCycle >= period) {
+        //   dutyCycle = (period * 0.4).toInt(); // Reduce to 40% if needed
+        // }
+
+        pwm0.setPeriodNs(period);
+        pwm0.setDutyCycleNs(dutyCycle);
       }
-      if (updatePeriod == 10) {
-        pwm0.setDutyCycleNs((c4 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(c4);
-      }
-      if (updatePeriod == 20) {
-        pwm0.setDutyCycleNs((d4 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(d4);
-      }
-      if (updatePeriod == 30) {
-        pwm0.setDutyCycleNs((e4 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(e4);
-      }
-      if (updatePeriod == 40) {
-        pwm0.setDutyCycleNs((f4 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(f4);
-      }
-      if (updatePeriod == 50) {
-        pwm0.setDutyCycleNs((g4 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(g4);
-      }
-      if (updatePeriod == 60) {
-        pwm0.setDutyCycleNs((a4 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(a4);
-      }
-      if (updatePeriod == 70) {
-        pwm0.setDutyCycleNs((b4 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(b4);
-      }
-      if (updatePeriod == 80) {
-        pwm0.setDutyCycleNs((c5 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(c5);
-      }
-      if (updatePeriod == 90) {
-        pwm0.setDutyCycleNs((d5 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(d5);
-      }
-      if (updatePeriod == 100) {
-        pwm0.setDutyCycleNs((e5 / 2).toInt());
-        // await Future.delayed(Duration(milliseconds: 500));
-        pwm0.setPeriodNs(e5);
-      }
-      debugPrint(
-        'In PwmBuzzerPeriodService updatePwmPeriod period= ${pwm0.getPeriodNs()}',
-      );
-      debugPrint(
-        'In PwmBuzzerPeriodService updatePwmPeriod PWM Info: ${pwm0.getDutyCycleNs()}',
-      );
+
+      debugPrint('Updated PWM Period: ${pwm0.getPeriodNs()} ns');
+      debugPrint('Updated PWM Duty Cycle: ${pwm0.getDutyCycleNs()} ns');
     }
   }
 

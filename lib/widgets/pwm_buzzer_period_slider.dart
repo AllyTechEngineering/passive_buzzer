@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:passive_buzzer/bloc/pwm_buzzer_period_cubit/pwm_buzzer_period_cubit.dart';
+import 'package:passive_buzzer/models/musical_notes.dart';
 import 'package:passive_buzzer/widgets/rectangular_slider_thumb_shape.dart';
 
 class PwmBuzzerPeriodSlider extends StatelessWidget {
@@ -12,16 +13,17 @@ class PwmBuzzerPeriodSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PwmBuzzerPeriodCubit, PwmBuzzerPeriodState>(
       builder: (context, state) {
+        String noteNames = MusicalNotes.noteNames[state.pwmPeriod] ?? '';
         return SizedBox(
-          height: 300, // Ensures full height is used
+          height: 350, // Ensures full height is used
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Period: ${state.pwmPeriod}%',
+                'Note: $noteNames',
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
@@ -56,7 +58,7 @@ class PwmBuzzerPeriodSlider extends StatelessWidget {
                       min: 0,
                       max: 100,
                       divisions: 10, // Add tick marks (10 steps)
-                      label: '${state.pwmPeriod}Hz', // Display percentage
+                      label: noteNames, // Display percentage
                       onChanged: (value) {
                         context.read<PwmBuzzerPeriodCubit>().updatePwmPeriod(
                           value.toInt(),
